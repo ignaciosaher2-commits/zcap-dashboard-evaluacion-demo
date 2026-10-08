@@ -88,6 +88,10 @@
       act.forEach(function (m) { onDay[f.fecha][m.id] = chosen ? chosen.indexOf(m) >= 0 : !!(inPlay[f.fecha] && inPlay[f.fecha][m.id]); });
     });
 
+    // A metric that no date evaluates (unchecked on every day, or never scored) stays out of the results.
+    const usada = {};
+    act.forEach(function (m) { usada[m.id] = fechas.some(function (f) { return onDay[f.fecha][m.id]; }); });
+
     const alumnos = model.alumnos.map(function (al) {
       const dias = fechas.map(function (f) {
         const presente = M.estaPresente(model, al.id, f.fecha);
@@ -124,7 +128,7 @@
         if (m.tipo === 'checklist') dias.forEach(function (d) { if (!d.presente && onDay[d.fecha][m.id]) { raws.push(0); aus++; } });
         const avg = mean(raws);
         return {
-          id: m.id, nombre: m.nombre, tipo: m.tipo || 'escala', min: m.min, max: m.max, minAprob: m.minAprob, n: raws.length, ausencias: aus,
+          id: m.id, nombre: m.nombre, tipo: m.tipo || 'escala', usada: usada[m.id], min: m.min, max: m.max, minAprob: m.minAprob, n: raws.length, ausencias: aus,
           promedio: avg, promedioNorm: avg === null ? null : normalizeScore(avg, m.min, m.max),
           alcanza: avg === null ? null : avg >= m.minAprob
         };
@@ -155,7 +159,7 @@
       const conDatos = alumnos.filter(function (a) { return a.metricas.some(function (x) { return x.id === m.id && x.n > 0; }); });
       const alcanzan = conDatos.filter(function (a) { return a.metricas.some(function (x) { return x.id === m.id && x.alcanza; }); });
       return {
-        id: m.id, nombre: m.nombre, grupo: m.grupo, tipo: m.tipo || 'escala', min: m.min, max: m.max, minAprob: m.minAprob,
+        id: m.id, nombre: m.nombre, grupo: m.grupo, tipo: m.tipo || 'escala', usada: usada[m.id], min: m.min, max: m.max, minAprob: m.minAprob,
         minAprobNorm: normalizeScore(m.minAprob, m.min, m.max), peso: m.peso,
         n: norms.length, promedio: mean(raws), promedioNorm: mean(norms),
         conDatos: conDatos.length, alcanzan: alcanzan.length,

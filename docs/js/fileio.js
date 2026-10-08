@@ -38,7 +38,7 @@
       ['plantilla_version', FILE_VERSION, 'No modificar'],
       ['nombre_curso', model.curso.curso || '', 'Nombre del curso que aparece en los informes'],
       ['tamano_minimo_grupo', model.config.tamano_minimo_grupo, 'Los grupos con menos alumnos se muestran como reservados'],
-      ['puntos_base', model.config.puntos_base || 0, 'Piso del puntaje diario (0 a 99); 0 = sin piso']
+      ['puntos_base', model.config.puntos_base || 0, '% base: mínimo garantizado del puntaje diario (0 a 99); 0 = sin base']
     ], [22, 40, 60]);
     add('Criterios', [['id_criterio', 'nombre', 'descripcion', 'grupo', 'peso', 'escala_min', 'escala_max', 'minimo_aprobacion', 'activo', 'tipo']].concat(
       model.metricas.map(function (m) { return [m.id, m.nombre, m.descripcion, m.grupo, m.peso === null ? '' : m.peso, m.min, m.max, m.minAprob, m.activa ? 'SI' : 'NO', m.tipo || 'escala']; })), [12, 34, 50, 28, 8, 11, 11, 18, 8, 11]);

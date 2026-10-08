@@ -138,10 +138,11 @@
     if (s.state === 'error') { t = s.error; cls = 'bad'; }
     else if (s.state === 'guardando') { t = 'Guardando…'; cls = 'wait'; }
     else if (s.state === 'guardado') { t = s.mode === 'descarga' ? 'Descargado a las ' + hora + ' (es una copia)' : 'Guardado a las ' + hora; cls = 'ok'; }
-    else if (s.state === 'sin-guardar') { t = s.blocked ? 'Sin guardar: el archivo cambió' : (s.draftAt ? 'Sin guardar · borrador en este navegador' : 'Sin guardar'); cls = 'warn'; }
+    else if (s.state === 'sin-guardar') { t = s.blocked ? 'Sin guardar: el archivo cambió' : 'Sin guardar'; cls = 'warn'; }
     else { t = s.canWrite ? 'Sin archivo: elige dónde guardar' : 'Este navegador no guarda automáticamente'; cls = 'warn'; }
     // a browser that cannot autosave says so in the page footer instead of a chip in the toolbar
-    var noAuto = !s.canWrite && s.state === 'sin-archivo';
+    // the draft kept in the browser is silent: the unsaved work is shown by the highlighted save button, not by a chip
+    var noAuto = (!s.canWrite && s.state === 'sin-archivo') || (s.state === 'sin-guardar' && !!s.draftAt && !s.blocked);
     el.hidden = noAuto;
     var fsv = $('foot-save');
     if (fsv) fsv.textContent = s.canWrite ? '' : 'Este navegador no guarda automáticamente: descarga el avance para no perder lo que llevas.';
@@ -211,6 +212,7 @@
     ZE.setCurso(m, it.curso);
     ZE.mergeAlumnos(m, it.alumnos);
     if (m.curso.fecha && ZE.isIsoDate(m.curso.fecha)) ZE.addFecha(m, m.curso.fecha, '');
+    ZE.setPuntosBase(m, ZE.PORCENTAJE_BASE_NUEVO);
     startWithModel(m, { confirmed: false, intake: it, name: name, keepHandle: false });
   }
 
@@ -260,7 +262,9 @@
       await P.clearDraft();
     }
     if (!(await okToReplaceDraft())) return;
-    startWithModel(ZE.createModel(), { confirmed: false, blank: true, name: '', keepHandle: false });
+    var nb = ZE.createModel();
+    ZE.setPuntosBase(nb, ZE.PORCENTAJE_BASE_NUEVO);
+    startWithModel(nb, { confirmed: false, blank: true, name: '', keepHandle: false });
   }
 
   async function openSaved() {
@@ -398,8 +402,8 @@
     }).join('');
     var table = m.metricas.length ? '<div class="table-wrap"><table class="tbl metrics"><thead><tr><th>Activa</th><th>Métrica</th><th>Tipo</th><th>Mínimo</th><th>Máximo</th><th>Mín. aprobación</th><th>Peso</th><th></th></tr></thead><tbody>' + rows + '</tbody></table></div>' : '<p class="muted">Aún no hay métricas.</p>';
     var e = cat.escala;
-    var baseBox = '<div class="base-box"><label for="puntos-base"><b>Puntos base</b></label><input type="text" id="puntos-base" class="narrow" inputmode="decimal" data-key="puntos-base" value="' + esc(numStr(m.config.puntos_base || 0)) + '" aria-label="Puntos base"> ' +
-      '<small>Piso del puntaje diario (0 a 99). 0 = sin piso.</small>' +
+    var baseBox = '<div class="base-box"><label for="puntos-base"><b>% base</b></label><input type="text" id="puntos-base" class="narrow" inputmode="decimal" data-key="puntos-base" value="' + esc(numStr(m.config.puntos_base || 0)) + '" aria-label="Porcentaje base"> <span class="pct-sign">%</span> ' +
+      '<small>Mínimo garantizado del puntaje de cada día. 0 = sin base.</small>' +
       (S.baseErr ? '<div class="field-error">' + esc(S.baseErr) + '</div>' : '') + '</div>';
     var ot = S.ownTipo === 'escala' ? 'escala' : 'checklist';
     var typeCards = '<div class="type-cards" role="radiogroup" aria-label="Tipo de métrica">' +
@@ -516,7 +520,7 @@
       html += '<div class="card"><h2>Resultados por fecha</h2><div class="grid-2 inner"><div>' + evol + '</div><div class="table-wrap"><table class="tbl small"><thead><tr><th>Fecha</th>' + (hasTema ? '<th>Tema</th>' : '') + '<th>Presentes</th><th>Evaluados</th><th>Promedio</th></tr></thead><tbody>' + dayRows + '</tbody></table></div></div></div>';
     }
 
-    var mets = r.metricas.slice().sort(function (a, b) { return (b.pctAlcanzan === null ? -1 : b.pctAlcanzan) - (a.pctAlcanzan === null ? -1 : a.pctAlcanzan); });
+    var mets = r.metricas.filter(function (x) { return x.usada; }).sort(function (a, b) { return (b.pctAlcanzan === null ? -1 : b.pctAlcanzan) - (a.pctAlcanzan === null ? -1 : a.pctAlcanzan); });
     html += '<div class="card"><h2>Cumplimiento del mínimo por métrica</h2>' + ZE.barRows(mets.map(function (x) {
       return x.promedioNorm === null ? { label: x.nombre, value: null } : {
         label: x.nombre, value: x.promedioNorm, marker: x.minAprobNorm,
@@ -572,8 +576,9 @@
       return '<tr><td>' + esc(fd(d.fecha)) + '</td><td>' + esc(d.tema || '—') + '</td><td>' + (d.presente ? 'Presente' : '<span class="ausente">ausente</span>') + '</td><td>' + (d.total === null ? '—' : '<b>' + fmt(d.total) + '</b>') + '</td><td>' + (d.cobertura === null ? '—' : fmt(d.cobertura, 0) + ' %') + '</td></tr>';
     }).join('');
     var metHead = a.dias.map(function (d) { return '<th>' + esc(sd(d.fecha)) + '</th>'; }).join('');
-    var showRef = a.metricas.some(function (x) { return x.tipo !== 'checklist'; });
-    var metRows = a.metricas.map(function (x) {
+    var usadas = a.metricas.filter(function (x) { return x.usada; });
+    var showRef = usadas.some(function (x) { return x.tipo !== 'checklist'; });
+    var metRows = usadas.map(function (x) {
       var cells = a.dias.map(function (d) {
         if (!d.presente) return '<td class="ausente">—</td>';
         var s = d.scores.filter(function (z) { return z.metricaId === x.id; })[0];
@@ -675,6 +680,11 @@
         if (await confirmBox('Dejar de evaluar métricas ese día', rd.message, 'Quitar métricas y eliminar puntajes')) { ZE.setMetricasDelDia(m, fday, ids, { confirm: true }); changed(); }
       } else if (rd.ok) changed(); else toast(rd.error);
       rerender();
+      return;
+    }
+    if (t.id === 'own-min' || t.id === 'own-max') {
+      var lo = ZE.toNum(($('own-min') || {}).value), hi = ZE.toNum(($('own-max') || {}).value), ma = $('own-ma');
+      if (ma && lo !== null && hi !== null && !Number.isNaN(lo) && !Number.isNaN(hi) && hi > lo) ma.value = String(Math.round((lo + 0.6 * (hi - lo)) * 100) / 100).replace('.', ',');
       return;
     }
     if (t.name === 'own-tipo') { var nm = $('own-name'); S.ownName = nm ? nm.value : ''; S.ownTipo = t.value; rerender(); return; }

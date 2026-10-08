@@ -47,7 +47,7 @@
       return out;
     }
     out.push('Su rendimiento final es ' + n1(a.final) + ', el promedio de ' + diasPunt.length + (diasPunt.length === 1 ? ' día evaluado.' : ' días evaluados.'));
-    if (res && res.puntosBase > 0) out.push('El puntaje de cada día parte de una base de ' + n1(res.puntosBase, 0) + ' puntos.');
+    if (res && res.puntosBase > 0) out.push('El puntaje de cada día tiene una base de ' + n1(res.puntosBase, 0) + ' %.');
     out.push('Alcanza el mínimo en ' + a.metricasAlcanzadas + ' de ' + a.metricasEvaluadas + (a.metricasEvaluadas === 1 ? ' métrica evaluada.' : ' métricas evaluadas.'));
     const conProm = a.metricas.filter(function (m) { return m.promedioNorm !== null; });
     if (conProm.length >= 2) {

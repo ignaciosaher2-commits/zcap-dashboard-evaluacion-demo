@@ -12,6 +12,8 @@
   'use strict';
 
   const SCHEMA_VERSION = '2.1.0';
+  /** % base that a NEW course starts with (the user can change it). Files that do not carry one keep 0, so old results do not move. */
+  const PORCENTAJE_BASE_NUEVO = 20;
   const CURSO_KEYS = ['curso', 'cliente', 'codigo_sence', 'contacto', 'relator', 'fecha', 'ref_interna', 'especificacion'];
 
   const ok = function (extra) { return Object.assign({ ok: true }, extra || {}); };
@@ -291,8 +293,8 @@
   }
 
   /** A checklist metric (Cumple / No cumple) always uses 0-1 with minimum 1; anything else is a numeric scale. */
-  /** Expected share of "Cumple" for a checklist (a fraction: 0.8 = 80 %) when the user does not set one. */
-  const CHECKLIST_MIN_DEFECTO = 0.8;
+  /** Expected share of "Cumple" for a checklist (a fraction: 0.6 = 60 %) when the user does not set one. */
+  const CHECKLIST_MIN_DEFECTO = 0.6;
 
   function minEsperadoError(tipo, v) {
     if (tipo !== 'checklist' || v === undefined || v === null || v === '') return null;
@@ -446,7 +448,7 @@
   /** Course base points: a number from 0 to 99. */
   function setPuntosBase(model, value) {
     const n = value === '' || value === null || value === undefined ? 0 : toNum(value);
-    if (Number.isNaN(n) || n < 0 || n > 99) return fail('Los puntos base deben estar entre 0 y 99.');
+    if (Number.isNaN(n) || n < 0 || n > 99) return fail('El % base debe estar entre 0 y 99.');
     model.config.puntos_base = n;
     return ok({ value: n });
   }
@@ -557,7 +559,7 @@
   }
 
   return {
-    SCHEMA_VERSION: SCHEMA_VERSION, CHECKLIST_MIN_DEFECTO: CHECKLIST_MIN_DEFECTO, CURSO_KEYS: CURSO_KEYS, createModel: createModel, nk: nk, isIsoDate: isIsoDate, rutKey: rutKey, toNum: toNum,
+    SCHEMA_VERSION: SCHEMA_VERSION, PORCENTAJE_BASE_NUEVO: PORCENTAJE_BASE_NUEVO, CHECKLIST_MIN_DEFECTO: CHECKLIST_MIN_DEFECTO, CURSO_KEYS: CURSO_KEYS, createModel: createModel, nk: nk, isIsoDate: isIsoDate, rutKey: rutKey, toNum: toNum,
     setCurso: setCurso, generateAlumnoId: generateAlumnoId, alumnoById: alumnoById, addAlumno: addAlumno, updateAlumno: updateAlumno,
     removeAlumno: removeAlumno, mergeAlumnos: mergeAlumnos,
     fechaObj: fechaObj, addFecha: addFecha, updateFecha: updateFecha, removeFecha: removeFecha,
