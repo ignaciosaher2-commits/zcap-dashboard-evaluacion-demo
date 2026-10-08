@@ -1,4 +1,4 @@
-# Dashboard de evaluación de alumnos — Instructivo
+﻿# Dashboard de evaluación de alumnos — Instructivo
 
 Herramienta de ZCAP para evaluar a los alumnos de un curso presencial día a día y ver el resultado (resumen del curso y ficha por alumno, en pantalla o PDF). Funciona en el navegador: **los datos de los alumnos no se envían a ningún servidor**; se guardan en un archivo Excel que tú eliges (y, solo si el navegador no puede guardar el archivo solo, en un borrador temporal en ese navegador; ver más abajo).
 
@@ -109,3 +109,4 @@ Ver `docs/vendor/LEEME-LIBRERIAS.txt`. El sitio no pide nada a otros dominios al
 ### Datos de plataforma (Tutor LMS) y encuestas
 
 Todavía no están implementados: dependen de ejemplos reales de los CSV de Tutor LMS y de las métricas que entregue TI.
+
