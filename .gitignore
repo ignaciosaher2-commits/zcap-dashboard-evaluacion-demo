@@ -1,0 +1,19 @@
+# Datos de alumnos: nunca al repositorio (solo plantilla y ejemplos ficticios)
+*.xlsx
+*.xls
+*.csv
+!docs/plantilla/*.xlsx
+!docs/ejemplos/*.xlsx
+!docs/ejemplos/*.csv
+
+# Material interno de planificacion (no se publica)
+openspec/
+.claude/
+
+# Archivos grandes generados para pruebas de rendimiento
+tests/_large/
+node_modules/
+
+# Salidas de revision y respaldos (no se publican)
+verificacion/
+respaldo/

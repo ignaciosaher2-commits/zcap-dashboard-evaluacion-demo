@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard de evaluación</title>
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <div id="privacy-ribbon-wrap"><div id="privacy-ribbon" hidden>Datos personales visibles: nombre, RUT y correo de los alumnos. No compartas esta pantalla ni su impresión sin autorización.</div></div>
+
+  <header class="topbar no-print">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true"></div>
+      <div>
+        <div class="brand-title" id="course-title">Dashboard de evaluación</div>
+        <div class="brand-sub" id="course-sub">Carga un curso para comenzar</div>
+      </div>
+    </div>
+    <nav class="stepper" id="stepper" aria-label="Pasos" hidden></nav>
+    <div class="topbar-right" id="topbar-right" hidden>
+      <label class="switch" id="presentation-switch" hidden title="Con el modo presentación activo no se muestran nombres, RUT ni correos">
+        <input type="checkbox" id="presentation" checked> Modo presentación
+      </label>
+      <button class="btn ghost" type="button" id="btn-new">Archivo nuevo</button>
+      <button class="btn ghost" type="button" id="btn-open" hidden title="Abrir una evaluación guardada o una Plantilla de Ingreso">Abrir</button>
+      <span class="save-status" id="save-status" role="status"></span>
+      <button class="btn ghost" type="button" id="btn-save"></button>
+      <button class="btn" type="button" id="print" hidden>Imprimir</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <div class="stack" id="screen"></div>
+  </main>
+
+  <div id="print-all" class="print-only" aria-hidden="true"></div>
+  <div id="modal-root"></div>
+
+  <footer class="screen-only"><div id="foot-save" class="foot-save"></div><div id="foot-text"></div></footer>
+
+  <script src="vendor/xlsx.full.min.js"></script>
+  <script src="js/format.js"></script>
+  <script src="js/workbook.js"></script>
+  <script src="js/validate.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/intake.js"></script>
+  <script src="js/scoring.js"></script>
+  <script src="js/fileio.js"></script>
+  <script src="js/persist.js"></script>
+  <script src="js/privacy.js"></script>
+  <script src="js/insights.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="data/metricas-predefinidas.js"></script>
+  <script src="js/fsaccess.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+Librerías de terceros incluidas en el repositorio (el sitio no pide nada a Internet al abrirse)
+
+1. SheetJS Community Edition (xlsx.full.min.js)
+   - Versión: 0.20.3
+   - Origen: https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js (sitio oficial; la copia de npm está desactualizada)
+   - Licencia: Apache-2.0 (texto completo en SHEETJS-LICENSE.txt)
+   - Uso: leer el archivo Excel (.xlsx) dentro del navegador. Cuando se actualice la plantilla, también se usa en las pruebas.
+   - Descargada el: 2026-10-07
+
+2. Tipografía (carpeta fonts/, en la raíz de docs)
+   - Figtree (títulos y texto), subconjunto latino, archivo .woff2 con pesos 400 a 700
+   - Origen: Google Fonts (https://fonts.google.com/specimen/Figtree), versión servida el 2026-10-07
+   - Licencia: SIL Open Font License 1.1 (texto en fonts/OFL-Figtree.txt)
+   - Elegida el 2026-10-07 por parecerse a la tipografía de la referencia de Ignacio (Pinterest usa una fuente propia que no se puede usar).
+
+Gráficos: dibujados por el propio sitio con HTML y SVG (js/charts.js); no hay librería de gráficos.
+
+Para actualizar una librería: descargar la versión nueva del sitio oficial, reemplazar el archivo, actualizar este texto,
+correr las pruebas (node --test tests/core.test.js) y revisar visualmente el dashboard antes de publicar.

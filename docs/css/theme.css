@@ -1,0 +1,34 @@
+/* THEME: the only file to edit to change colours, fonts or the logo. */
+:root {
+  --font-title: 'Figtree', 'Segoe UI', Arial, sans-serif;
+  --title-weight: 700;
+  --font-body: 'Figtree', 'Segoe UI', Arial, sans-serif;
+
+  --ink: #1d2542;
+  --muted: #667090;
+  --bg: #eceff6;
+  --card: #ffffff;
+  --line: #e1e6f0;
+  --dark: #151e4d;          /* dark card */
+  --dark-ink: #ffffff;
+
+  --primary: #2a3a85;       /* deep blue */
+  --primary-soft: #e4e8f5;
+  --accent: #f6b91a;        /* yellow-orange: print button and "below threshold" bars */
+  --accent-ink: #1d2542;
+
+  --ok: #1f9d6b;
+  --ok-soft: #dff4ea;
+  --low: #c9532f;
+  --low-soft: #fbe6e0;
+  --warn-bg: #fff4d6;
+  --warn-ink: #7a5300;
+  --pii-bg: #fde8e4;
+  --pii-ink: #8a2a16;
+
+  --logo: url('../img/logo-zcap.png');   /* logo shown in the top bar and in every printed report */
+  --logo-size: 56px;                     /* 0px hides the logo */
+  --hero: url('../img/encabezado-fondo.webp');   /* photo behind the blue header of the reports; "none" turns it off */
+  --radius: 16px;
+  --shadow: 0 6px 20px rgba(31, 42, 92, 0.08);
+}

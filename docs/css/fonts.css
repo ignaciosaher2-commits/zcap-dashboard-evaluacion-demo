@@ -1,0 +1,8 @@
+/* Fuente incluida en el repositorio (SIL OFL 1.1, ver fonts/OFL-Figtree.txt). Sin llamadas externas. */
+@font-face {
+  font-family: 'Figtree';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/figtree-latin.woff2') format('woff2');
+}
